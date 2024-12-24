@@ -1,6 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Backend\Brand\BrandController;
+use App\Http\Controllers\Api\Backend\Category\CategoryController;
+use App\Http\Controllers\Api\Backend\SubCategory\SubCategoryController;
+use App\Http\Controllers\Api\Backend\Unit\UnitController;
+use App\Http\Controllers\Api\Frontend\FrontendController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +23,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
+// Frontend Routes
+Route::get('get-categories', [FrontendController::class, 'categories']);
+Route::get('get-sub-categories', [FrontendController::class, 'subCategories']);
+Route::get('get-brands', [FrontendController::class, 'brands']);
+Route::get('get-units', [FrontendController::class, 'units']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
@@ -28,6 +39,42 @@ Route::middleware('auth:sanctum')->group(function () {
  Route::middleware(['auth:sanctum', 'role_check:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return response()->json(['message' => 'Welcome to Admin Dashboard']);
+    });
+
+    // Category routes
+    Route::prefix('categories')->group(function () {
+        Route::get('/', [CategoryController::class, 'index']);
+        Route::post('/store', [CategoryController::class, 'store']);
+        Route::get('/show/{id}', [CategoryController::class, 'show']);
+        Route::post('/update', [CategoryController::class, 'update']);
+        Route::delete('/delete/{id}', [CategoryController::class, 'destroy']);
+    });
+
+    // Sub-Category routes
+    Route::prefix('sub-categories')->group(function () {
+        Route::get('/', [SubCategoryController::class, 'index']);
+        Route::post('/store', [SubCategoryController::class, 'store']);
+        Route::get('/show/{id}', [SubCategoryController::class, 'show']);
+        Route::post('/update', [SubCategoryController::class, 'update']);
+        Route::delete('/delete/{id}', [SubCategoryController::class, 'destroy']);
+    });
+
+    // Brand routes
+    Route::prefix('brands')->group(function () {
+        Route::get('/', [BrandController::class, 'index']);
+        Route::post('/store', [BrandController::class, 'store']);
+        Route::get('/show/{id}', [BrandController::class, 'show']);
+        Route::post('/update', [BrandController::class, 'update']);
+        Route::delete('/delete/{id}', [BrandController::class, 'destroy']);
+    });
+
+    // Unit routes
+    Route::prefix('units')->group(function () {
+        Route::get('/', [UnitController::class, 'index']);
+        Route::post('/store', [UnitController::class, 'store']);
+        Route::get('/show/{id}', [UnitController::class, 'show']);
+        Route::post('/update', [UnitController::class, 'update']);
+        Route::delete('/delete/{id}', [UnitController::class, 'destroy']);
     });
 });
 
