@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Backend\Brand\BrandController;
 use App\Http\Controllers\Api\Backend\Category\CategoryController;
+use App\Http\Controllers\Api\Backend\Products\ProductController;
 use App\Http\Controllers\Api\Backend\SubCategory\SubCategoryController;
 use App\Http\Controllers\Api\Backend\Unit\UnitController;
 use App\Http\Controllers\Api\Frontend\FrontendController;
@@ -28,6 +29,9 @@ Route::get('get-categories', [FrontendController::class, 'categories']);
 Route::get('get-sub-categories', [FrontendController::class, 'subCategories']);
 Route::get('get-brands', [FrontendController::class, 'brands']);
 Route::get('get-units', [FrontendController::class, 'units']);
+Route::get('get-products', [FrontendController::class, 'products']);
+Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
@@ -75,6 +79,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/{id}', [UnitController::class, 'show']);
         Route::post('/update', [UnitController::class, 'update']);
         Route::delete('/delete/{id}', [UnitController::class, 'destroy']);
+    });
+
+    // Products routes
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::post('/store', [ProductController::class, 'store']);
+        Route::get('/show/{id}', [ProductController::class, 'show']);
+        Route::post('/update', [ProductController::class, 'update']);
+        Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
     });
 });
 
