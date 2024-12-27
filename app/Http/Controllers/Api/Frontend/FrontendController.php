@@ -91,6 +91,7 @@ class FrontendController extends Controller
         ], 200);
     }
 
+
     public function products(Request $request)
     {
         $search = $request->search ?? null;
@@ -134,4 +135,5 @@ class FrontendController extends Controller
             'data' => $product
         ], 200);
     }
+
 }

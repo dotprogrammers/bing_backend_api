@@ -29,6 +29,7 @@ Route::get('get-categories', [FrontendController::class, 'categories']);
 Route::get('get-sub-categories', [FrontendController::class, 'subCategories']);
 Route::get('get-brands', [FrontendController::class, 'brands']);
 Route::get('get-units', [FrontendController::class, 'units']);
+
 Route::get('get-products', [FrontendController::class, 'products']);
 Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
 
@@ -81,6 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/delete/{id}', [UnitController::class, 'destroy']);
     });
 
+
     // Products routes
     Route::prefix('products')->group(function () {
         Route::get('/', [ProductController::class, 'index']);
@@ -89,6 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/update', [ProductController::class, 'update']);
         Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
     });
+
 });
 
 // Routes for Vendor Role
