@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\SubCategory;
 use App\Models\Unit;
 use Illuminate\Http\Request;
@@ -89,4 +90,50 @@ class FrontendController extends Controller
             'data' => $units
         ], 200);
     }
+
+
+    public function products(Request $request)
+    {
+        $search = $request->search ?? null;
+        $limit = $request->limit ?? 10;
+
+        $prosucts = Product::select('products.id','products.name','products.price', 'products.image', 'products.condition')->where('is_delete', 0)->where('status', 'active');
+
+        if ($search) {
+            $prosucts->where('name', 'like', "%$search%");
+        }
+
+        $prosucts = $prosucts->paginate($limit);
+
+        $prosucts->getCollection()->transform(function ($product) {
+            $product->image = url('uploads/products/image/' . $product->image);
+           
+            return $product;
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $prosucts
+        ], 200);
+    }
+
+    public function productDetail($id)
+    {
+        $product = Product::with('brand')->where('id', $id)->first();
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        $product->image = url('uploads/products/image/' . $product->image);
+
+        return response()->json([
+            'success' => true,
+            'data' => $product
+        ], 200);
+    }
+
 }
