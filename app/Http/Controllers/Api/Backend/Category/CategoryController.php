@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\SkillJob;
 
 class CategoryController extends Controller
 {
@@ -109,4 +110,97 @@ class CategoryController extends Controller
             'message' => 'Category deleted successfully'
         ], 200);
     }
+
+
+    // skill job controller
+
+    public function getSkill(Request $request)
+    {
+        $search = $request->search ?? null;
+        $limit = $request->limit ?? 10;
+
+        $skills = SkillJob::where('is_delete', 0);
+
+        if ($search) {
+            $skills->where('name', 'like', "%$search%");
+        }
+
+        $skills = $skills->paginate($limit);
+
+        return response()->json([
+            'success' => true,
+            'data' => $skills
+        ], 200);
+    }
+
+
+    public function storeSkill(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:skills,name'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $skill = new SkillJob();
+        $skill->name = $request->name;
+        $skill->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'skill created successfully',
+            'data' => $skill
+        ], 200);
+    }
+
+
+
+    public function updateSkill(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+
+        $skill = SkillJob::find($request->id);
+        if (!$skill) {
+            return response()->json(['success' => false, 'message' => 'skill not found'], 404);
+        }
+
+        $skill->name = $request->name;
+        $skill->save();
+
+        return response()->json(['success' => true, 'data' => $skill], 200);
+    }
+
+    public function destroySkill($id)
+    {
+        $skill = SkillJob::find($id);
+        if (!$skill) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Skill not found'
+            ], 404);
+        }
+
+        $skill->is_delete = 1;
+        $skill->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Skill deleted successfully'
+        ], 200);
+    }
+
+
 }
