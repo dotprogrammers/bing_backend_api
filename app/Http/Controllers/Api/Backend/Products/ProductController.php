@@ -18,7 +18,7 @@ class ProductController extends Controller
         $search = $request->search ?? null;
         $limit = $request->limit ?? 10;
 
-        $prosucts = Product::with('brand')->where('is_delete', 0);
+        $prosucts = Product::with('category:id,name', 'subCategory:id,name', 'brand:id,name', 'unit:id,name')->where('is_delete', 0);
 
         if ($prosucts) {
             $prosucts->where('name', 'like', "%$search%");
