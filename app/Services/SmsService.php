@@ -14,7 +14,7 @@ class SmsService
             $response = Http::withHeaders([
                 'accept' => 'application/json ',
             ])->post(config('sms.api_url'), [
-                'recipient' => '880' . $to,
+                'recipient' => '88' . $to,
                 'sender_id' => config('sms.sender_id'),
                 'type' => 'plain',
                 'message' => $message,
