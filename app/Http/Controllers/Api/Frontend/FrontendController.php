@@ -136,4 +136,14 @@ class FrontendController extends Controller
         ], 200);
     }
 
+    public function getSubCategory($id)
+    {
+        $sub_categories = SubCategory::select('id', 'name')->where('category_id', $id)->where('is_delete', 0)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $sub_categories
+        ], 200);
+    }
+
 }

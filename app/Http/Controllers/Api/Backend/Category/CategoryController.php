@@ -70,7 +70,7 @@ class CategoryController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:categories,name'
+            'name' => 'required'
         ]);
 
         if ($validator->fails()) {

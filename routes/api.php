@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Backend\Brand\BrandController;
 use App\Http\Controllers\Api\Backend\Category\CategoryController;
+use App\Http\Controllers\Api\Backend\Jobs\JobController;
 use App\Http\Controllers\Api\Backend\Products\ProductController;
 use App\Http\Controllers\Api\Backend\SubCategory\SubCategoryController;
 use App\Http\Controllers\Api\Backend\Unit\UnitController;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('register', [AuthController::class, 'register']);
+Route::post('mobile-verify', [AuthController::class, 'mobileVerify']);
 Route::post('login', [AuthController::class, 'login']);
 
 // Frontend Routes
@@ -34,6 +36,7 @@ Route::get('get-units', [FrontendController::class, 'units']);
 
 Route::get('get-products', [FrontendController::class, 'products']);
 Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
+Route::get('get-sub-category/{id}', [FrontendController::class, 'getSubCategory']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -102,6 +105,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/{id}', [ProductController::class, 'show']);
         Route::post('/update', [ProductController::class, 'update']);
         Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
+    });
+
+    Route::prefix('jobs')->group(function () {
+        Route::get('/', [JobController::class, 'index']);
+        Route::post('/store', [JobController::class, 'store']);
+        Route::get('/show/{id}', [JobController::class, 'show']);
+        Route::post('/update', [JobController::class, 'update']);
+        Route::delete('/delete/{id}', [JobController::class, 'destroy']);
     });
 
 });

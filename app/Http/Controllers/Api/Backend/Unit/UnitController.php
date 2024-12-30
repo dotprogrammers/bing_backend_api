@@ -69,7 +69,7 @@ class UnitController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:units,name',
+            'name' => 'required',
         ]);
 
         if ($validator->fails()) {
