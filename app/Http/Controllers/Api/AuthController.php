@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use App\Services\SmsService;
+
 
 use function Symfony\Component\String\b;
 
@@ -20,7 +22,8 @@ class AuthController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
-                'email' => 'required|email',
+                'email' => 'required|email|unique:users,email',
+                'mobile_number' => 'required|numeric|digits:11|unique:users,mobile_number',
                 'password' => 'required|min:8',
                 'confirm_password' => 'required|same:password',
             ]);
@@ -32,11 +35,17 @@ class AuthController extends Controller
                 ], 422);
             }
 
+            $otp = rand(100000, 999999);
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'mobile_number' => $request->mobile_number,
+                'sms_otp' => $otp,
+                'sms_status' => false,
                 'password' => bcrypt($request->password),
             ]);
+            (new SmsService)->sendMessage($user->mobile_number, "Your verification code is $otp");
 
             $user_role = Role::where('name', 'vendor')->first();
             if ($user_role) {
@@ -55,7 +64,7 @@ class AuthController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            throw $e;
+            // throw $e;
             DB::rollBack();
 
             return response()->json([
@@ -65,6 +74,43 @@ class AuthController extends Controller
         }
     }
 
+    public function mobileVerify(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mobile_number' => 'required|numeric',
+            'otp' => 'required|numeric',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+    
+        $user = User::where('mobile_number', $request->mobile_number)
+                    ->where('sms_otp', $request->otp)
+                    ->first();
+    
+        if (!$user) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Invalid OTP or mobile number.',
+            ], 401);
+        }
+    
+        $user->update([
+            'sms_status' => true,
+            'sms_otp' => null,
+        ]);
+        $token = $user->createToken('API Token')->plainTextToken;
+
+        return response()->json([
+            'status' => 200,
+            'token' => $token,
+            'message' => 'Mobile number verified successfully.',
+        ]);
+    }
 
     public function login(Request $request)
     {
