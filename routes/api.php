@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Frontend\FrontendController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,6 +29,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 // Frontend Routes
 Route::get('get-categories', [FrontendController::class, 'categories']);
+Route::get('skill-job', [FrontendController::class, 'skills']);
 Route::get('get-sub-categories', [FrontendController::class, 'subCategories']);
 Route::get('get-brands', [FrontendController::class, 'brands']);
 Route::get('get-units', [FrontendController::class, 'units']);
@@ -57,6 +59,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/update', [CategoryController::class, 'update']);
         Route::delete('/delete/{id}', [CategoryController::class, 'destroy']);
     });
+
+// skill
+
+    Route::get('/skills',[CategoryController::class,'getSkill']);
+    Route::post('/skills/store',[CategoryController::class,'storeSkill']);
+    // Route::get('show/{id}',[CategoryController::class,'show']);
+    Route::post('/skills/update',[CategoryController::class,'updateSkill']);
+    Route::delete('/skills/delete/{id}',[CategoryController::class,'deleteSkill']);
+
+
 
     // Sub-Category routes
     Route::prefix('sub-categories')->group(function () {
