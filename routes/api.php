@@ -30,13 +30,10 @@ Route::post('login', [AuthController::class, 'login']);
 // Frontend Routes
 Route::get('get-categories', [FrontendController::class, 'categories']);
 Route::get('skill-job', [FrontendController::class, 'skills']);
-Route::get('get-sub-categories', [FrontendController::class, 'subCategories']);
 Route::get('get-brands', [FrontendController::class, 'brands']);
-Route::get('get-units', [FrontendController::class, 'units']);
 
 Route::get('get-products', [FrontendController::class, 'products']);
 Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
-Route::get('get-sub-category/{id}', [FrontendController::class, 'getSubCategory']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -68,17 +65,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/skills/update',[CategoryController::class,'updateSkill']);
     Route::delete('/skills/delete/{id}',[CategoryController::class,'deleteSkill']);
 
-
-
-    // Sub-Category routes
-    Route::prefix('sub-categories')->group(function () {
-        Route::get('/', [SubCategoryController::class, 'index']);
-        Route::post('/store', [SubCategoryController::class, 'store']);
-        Route::get('/show/{id}', [SubCategoryController::class, 'show']);
-        Route::post('/update', [SubCategoryController::class, 'update']);
-        Route::delete('/delete/{id}', [SubCategoryController::class, 'destroy']);
-    });
-
     // Brand routes
     Route::prefix('brands')->group(function () {
         Route::get('/', [BrandController::class, 'index']);
@@ -86,15 +72,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/{id}', [BrandController::class, 'show']);
         Route::post('/update', [BrandController::class, 'update']);
         Route::delete('/delete/{id}', [BrandController::class, 'destroy']);
-    });
-
-    // Unit routes
-    Route::prefix('units')->group(function () {
-        Route::get('/', [UnitController::class, 'index']);
-        Route::post('/store', [UnitController::class, 'store']);
-        Route::get('/show/{id}', [UnitController::class, 'show']);
-        Route::post('/update', [UnitController::class, 'update']);
-        Route::delete('/delete/{id}', [UnitController::class, 'destroy']);
     });
 
 
