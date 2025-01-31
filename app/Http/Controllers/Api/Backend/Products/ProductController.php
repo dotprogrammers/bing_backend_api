@@ -18,7 +18,7 @@ class ProductController extends Controller
         $search = $request->search ?? null;
         $limit = $request->limit ?? 10;
 
-        $prosucts = Product::with('category:id,name', 'subCategory:id,name', 'brand:id,name', 'unit:id,name')->where('is_delete', 0);
+        $prosucts = Product::with('category:id,name', 'brand:id,name')->where('is_delete', 0);
 
         if ($prosucts) {
             $prosucts->where('name', 'like', "%$search%");
@@ -61,8 +61,6 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->brand_id = $request->brand_id;
         $product->category_id = $request->category_id;
-        $product->unit_id = $request->unit_id;
-        $product->sub_category_id = $request->sub_category_id;
         $product->condition = $request->condition;
         $product->description = $request->description;
         if ($request->hasFile('image')) { 
@@ -85,7 +83,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Product::with('brand')->where('id', $id)->first();
+        $product = Product::with('brand:id,name')->where('id', $id)->first();
 
         if (!$product) {
             return response()->json([
@@ -125,8 +123,6 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->brand_id = $request->brand_id;
         $product->category_id = $request->category_id;
-        $product->unit_id = $request->unit_id;
-        $product->sub_category_id = $request->sub_category_id;
         $product->condition = $request->condition;
         $product->description = $request->description;
         $product->status = $request->status;

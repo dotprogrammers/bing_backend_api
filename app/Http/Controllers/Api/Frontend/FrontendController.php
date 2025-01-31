@@ -31,28 +31,6 @@ class FrontendController extends Controller
         ], 200);
     }
 
-    public function subCategories(Request $request)
-    {
-        $search = $request->search ?? null;
-        $limit = $request->limit ?? 10;
-
-        $sub_categories = SubCategory::with('category')->where('is_delete', 0)->where('status', 'active');
-
-        if ($search) {
-            $sub_categories->where('name', 'like', "%$search%")
-                ->orWhereHas('category', function ($query) use ($search) {
-                    $query->where('name', 'like', "%$search%");
-                });
-        }
-
-        $sub_categories = $sub_categories->paginate($limit);
-
-        return response()->json([
-            'success' => true,
-            'data' => $sub_categories
-        ], 200);
-    }
-
     public function brands(Request $request)
     {
         $search = $request->search ?? null;
@@ -69,25 +47,6 @@ class FrontendController extends Controller
         return response()->json([
             'success' => true,
             'data' => $brands
-        ], 200);
-    }
-
-    public function units(Request $request)
-    {
-        $search = $request->search ?? null;
-        $limit = $request->limit ?? 10;
-
-        $units = Unit::where('is_delete', 0)->where('status', 'active');
-
-        if ($search) {
-            $units->where('name', 'like', "%$search%");
-        }
-
-        $units = $units->paginate($limit);
-
-        return response()->json([
-            'success' => true,
-            'data' => $units
         ], 200);
     }
 
@@ -119,7 +78,7 @@ class FrontendController extends Controller
 
     public function productDetail($id)
     {
-        $product = Product::with('brand')->where('id', $id)->first();
+        $product = Product::with('brand:id,name')->where('id', $id)->first();
 
         if (!$product) {
             return response()->json([
@@ -133,16 +92,6 @@ class FrontendController extends Controller
         return response()->json([
             'success' => true,
             'data' => $product
-        ], 200);
-    }
-
-    public function getSubCategory($id)
-    {
-        $sub_categories = SubCategory::select('id', 'name')->where('category_id', $id)->where('is_delete', 0)->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $sub_categories
         ], 200);
     }
 
