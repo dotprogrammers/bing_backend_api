@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Backend\Brand\BrandController;
 use App\Http\Controllers\Api\Backend\Category\CategoryController;
+use App\Http\Controllers\Api\Backend\Jobs\JobCategoryController;
 use App\Http\Controllers\Api\Backend\Jobs\JobController;
 use App\Http\Controllers\Api\Backend\Products\ProductController;
 use App\Http\Controllers\Api\Backend\SubCategory\SubCategoryController;
@@ -31,7 +32,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::get('get-categories', [FrontendController::class, 'categories']);
 Route::get('skill-job', [FrontendController::class, 'skills']);
 Route::get('get-brands', [FrontendController::class, 'brands']);
-
+Route::get('job-categories', [FrontendController::class, 'jobCategories']);
 Route::get('get-products', [FrontendController::class, 'products']);
 Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
 
@@ -84,12 +85,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
     });
 
+    // Jobs routes
     Route::prefix('jobs')->group(function () {
         Route::get('/', [JobController::class, 'index']);
         Route::post('/store', [JobController::class, 'store']);
         Route::get('/show/{id}', [JobController::class, 'show']);
         Route::post('/update', [JobController::class, 'update']);
         Route::delete('/delete/{id}', [JobController::class, 'destroy']);
+    });
+
+    // Job Category routes
+    Route::prefix('job-category')->group(function () {
+        Route::get('/', [JobCategoryController::class, 'index']);
+        Route::post('/store', [JobCategoryController::class, 'store']);
+        Route::get('/show/{id}', [JobCategoryController::class, 'show']);
+        Route::post('/update', [JobCategoryController::class, 'update']);
+        Route::delete('/delete/{id}', [JobCategoryController::class, 'destroy']);
     });
 
 });

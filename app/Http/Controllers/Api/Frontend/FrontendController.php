@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\JobCategory;
 use App\Models\Product;
 use App\Models\SubCategory;
 use App\Models\Unit;
@@ -14,16 +15,7 @@ class FrontendController extends Controller
 {
     public function categories(Request $request)
     {
-        $search = $request->search ?? null;
-        $limit = $request->limit ?? 10;
-
-        $categories = Category::where('is_delete', 0)->where('status', 'active');
-
-        if ($search) {
-            $categories->where('name', 'like', "%$search%");
-        }
-
-        $categories = $categories->paginate($limit);
+        $categories = Category::where('is_delete', 0)->get();
 
         return response()->json([
             'success' => true,
@@ -33,20 +25,20 @@ class FrontendController extends Controller
 
     public function brands(Request $request)
     {
-        $search = $request->search ?? null;
-        $limit = $request->limit ?? 10;
-
-        $brands = Brand::where('is_delete', 0)->where('status', 'active');
-
-        if ($search) {
-            $brands->where('name', 'like', "%$search%");
-        }
-
-        $brands = $brands->paginate($limit);
+        $brands = Brand::where('is_delete', 0)->get();
 
         return response()->json([
             'success' => true,
             'data' => $brands
+        ], 200);
+    }
+
+    public function jobCategories(Request $request)
+    {
+        $jobCategories = JobCategory::where('is_delete', 0)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $jobCategories
         ], 200);
     }
 
@@ -56,7 +48,7 @@ class FrontendController extends Controller
         $search = $request->search ?? null;
         $limit = $request->limit ?? 10;
 
-        $prosucts = Product::select('products.id','products.name','products.price', 'products.image', 'products.condition')->where('is_delete', 0)->where('status', 'active');
+        $prosucts = Product::select('products.id','products.name','products.price', 'products.image', 'products.condition')->where('is_delete', 0);
 
         if ($search) {
             $prosucts->where('name', 'like', "%$search%");
