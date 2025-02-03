@@ -27,7 +27,7 @@ class ProductController extends Controller
         $prosucts = $prosucts->paginate($limit);
 
         $prosucts->getCollection()->transform(function ($product) {
-            $product->image = url('uploads/products/image/' . $product->image);
+        $product->image = url('uploads/products/image/' . $product->image);
            
             return $product;
         });

@@ -4,10 +4,9 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Backend\Brand\BrandController;
 use App\Http\Controllers\Api\Backend\Category\CategoryController;
 use App\Http\Controllers\Api\Backend\Jobs\JobCategoryController;
-use App\Http\Controllers\Api\Backend\Jobs\JobController;
+use App\Http\Controllers\Api\Backend\Education\EducationController;
+use App\Http\Controllers\Api\Backend\Jobs\JobProfileController;
 use App\Http\Controllers\Api\Backend\Products\ProductController;
-use App\Http\Controllers\Api\Backend\SubCategory\SubCategoryController;
-use App\Http\Controllers\Api\Backend\Unit\UnitController;
 use App\Http\Controllers\Api\Frontend\FrontendController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,10 +34,19 @@ Route::get('get-brands', [FrontendController::class, 'brands']);
 Route::get('job-categories', [FrontendController::class, 'jobCategories']);
 Route::get('get-products', [FrontendController::class, 'products']);
 Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
+Route::get('educations', [FrontendController::class, 'education']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
+});
+
+
+// Jobs routes
+Route::prefix('job')->group(function () {
+    Route::get('/', [JobProfileController::class, 'index']);
+    Route::post('/store', [JobProfileController::class, 'storeOrUpdate']);
+    Route::get('/show/{id}', [JobProfileController::class, 'show']);
 });
 
 
@@ -85,13 +93,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
     });
 
-    // Jobs routes
-    Route::prefix('jobs')->group(function () {
-        Route::get('/', [JobController::class, 'index']);
-        Route::post('/store', [JobController::class, 'store']);
-        Route::get('/show/{id}', [JobController::class, 'show']);
-        Route::post('/update', [JobController::class, 'update']);
-        Route::delete('/delete/{id}', [JobController::class, 'destroy']);
+    // Education routes
+    Route::prefix('education')->group(function () {
+        Route::get('/', [EducationController::class, 'index']);
+        Route::post('/store', [EducationController::class, 'store']);
+        Route::get('/show/{id}', [EducationController::class, 'show']);
+        Route::post('/update', [EducationController::class, 'update']);
+        Route::delete('/delete/{id}', [EducationController::class, 'destroy']);
     });
 
     // Job Category routes

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Education;
 use App\Models\JobCategory;
 use App\Models\Product;
 use App\Models\SubCategory;
@@ -85,6 +86,15 @@ class FrontendController extends Controller
             'success' => true,
             'data' => $product
         ], 200);
+    }
+
+    public function education()
+    {
+        $query = Education::where('is_delete', 0)->get();
+        return response()->json([
+            'status' => true,
+            'data' => $query
+        ]);
     }
 
 }
