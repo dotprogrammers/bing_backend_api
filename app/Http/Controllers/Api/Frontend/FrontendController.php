@@ -9,6 +9,8 @@ use App\Models\Category;
 use App\Models\Education;
 use App\Models\JobCategory;
 use App\Models\Product;
+use App\Models\ProductBooking;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
@@ -115,5 +117,40 @@ class FrontendController extends Controller
             'status' => true,
             'data' => $query
         ]);
+    }
+
+    public function productBooking(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'phone' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'product_id' => 'required',
+            'adult' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $booking = new ProductBooking();
+        $booking->product_id = $request->product_id;
+        $booking->user_id = $request->user_id;
+        $booking->start_date = $request->start_date;
+        $booking->end_date = $request->end_date;
+        $booking->name = $request->name;
+        $booking->phone = $request->phone;
+        $booking->adult = $request->adult;
+        $booking->child = $request->child;
+        $booking->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking has been completed'
+        ], 200);
     }
 }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('is_delete')->default(0);
             $table->integer('is_exchange')->default(0);
+            $table->integer('is_available')->default(0)->comment('0 = Available, 1 = Booked');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

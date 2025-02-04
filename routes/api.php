@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Backend\Blood\BloodCategoryController;
 use App\Http\Controllers\Api\Backend\Blood\BloodDonateController;
+use App\Http\Controllers\Api\Backend\BookingController;
 use App\Http\Controllers\Api\Backend\Brand\BrandController;
 use App\Http\Controllers\Api\Backend\Category\CategoryController;
 use App\Http\Controllers\Api\Backend\Jobs\JobCategoryController;
@@ -40,6 +41,8 @@ Route::get('exchange-products', [FrontendController::class, 'exchangeProducts'])
 Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
 Route::get('educations', [FrontendController::class, 'education']);
 Route::get('blood-categories', [FrontendController::class, 'bloodCategories']);
+Route::post('product-booking', [FrontendController::class, 'productBooking']);
+
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -132,6 +135,14 @@ Route::get('donate/{id}', [BloodDonateController::class, 'index']);
         Route::get('/show/{id}', [BloodCategoryController::class, 'show']);
         Route::post('/update', [BloodCategoryController::class, 'update']);
         Route::delete('/delete/{id}', [BloodCategoryController::class, 'destroy']);
+    });
+
+    // Product Booking routes
+    Route::prefix('product-booking')->group(function () {
+        Route::get('/list', [BookingController::class, 'index']);
+        Route::get('/show/{id}', [BookingController::class, 'show']);
+        Route::post('/update', [BookingController::class, 'update']);
+        Route::delete('/delete/{id}', [BookingController::class, 'destroy']);
     });
 
 });
