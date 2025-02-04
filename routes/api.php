@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Backend\Blood\BloodCategoryController;
+use App\Http\Controllers\Api\Backend\Blood\BloodDonateController;
 use App\Http\Controllers\Api\Backend\Brand\BrandController;
 use App\Http\Controllers\Api\Backend\Category\CategoryController;
 use App\Http\Controllers\Api\Backend\Jobs\JobCategoryController;
 use App\Http\Controllers\Api\Backend\Education\EducationController;
 use App\Http\Controllers\Api\Backend\Jobs\JobProfileController;
 use App\Http\Controllers\Api\Backend\Products\ProductController;
+use App\Http\Controllers\Api\Backend\Profile\ProfileController;
 use App\Http\Controllers\Api\Frontend\FrontendController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +38,7 @@ Route::get('job-categories', [FrontendController::class, 'jobCategories']);
 Route::get('get-products', [FrontendController::class, 'products']);
 Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
 Route::get('educations', [FrontendController::class, 'education']);
+Route::get('blood-categories', [FrontendController::class, 'bloodCategories']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -48,6 +52,16 @@ Route::prefix('job')->group(function () {
     Route::post('/store', [JobProfileController::class, 'storeOrUpdate']);
     Route::get('/show/{id}', [JobProfileController::class, 'show']);
 });
+
+// Profile routes
+Route::prefix('profile')->group(function () {
+    Route::post('/store', [ProfileController::class, 'storeOrUpdate']);
+    Route::get('/show/{id}', [ProfileController::class, 'show']);
+});
+
+
+// Blood Donate routes
+Route::get('donate/{id}', [BloodDonateController::class, 'index']);
 
 
 
@@ -67,7 +81,6 @@ Route::prefix('job')->group(function () {
     });
 
 // skill
-
     Route::get('/skills',[CategoryController::class,'getSkill']);
     Route::post('/skills/store',[CategoryController::class,'storeSkill']);
     // Route::get('show/{id}',[CategoryController::class,'show']);
@@ -109,6 +122,15 @@ Route::prefix('job')->group(function () {
         Route::get('/show/{id}', [JobCategoryController::class, 'show']);
         Route::post('/update', [JobCategoryController::class, 'update']);
         Route::delete('/delete/{id}', [JobCategoryController::class, 'destroy']);
+    });
+
+    // Blood Category routes
+    Route::prefix('blood-category')->group(function () {
+        Route::get('/', [BloodCategoryController::class, 'index']);
+        Route::post('/store', [BloodCategoryController::class, 'store']);
+        Route::get('/show/{id}', [BloodCategoryController::class, 'show']);
+        Route::post('/update', [BloodCategoryController::class, 'update']);
+        Route::delete('/delete/{id}', [BloodCategoryController::class, 'destroy']);
     });
 
 });

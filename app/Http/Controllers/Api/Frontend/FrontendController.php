@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\BloodCategory;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Education;
 use App\Models\JobCategory;
 use App\Models\Product;
-use App\Models\SubCategory;
-use App\Models\Unit;
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
@@ -91,6 +90,15 @@ class FrontendController extends Controller
     public function education()
     {
         $query = Education::where('is_delete', 0)->get();
+        return response()->json([
+            'status' => true,
+            'data' => $query
+        ]);
+    }
+
+    public function bloodCategories()
+    {
+        $query = BloodCategory::where('is_delete', 0)->get();
         return response()->json([
             'status' => true,
             'data' => $query
