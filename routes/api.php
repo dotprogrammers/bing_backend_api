@@ -36,6 +36,7 @@ Route::get('skill-job', [FrontendController::class, 'skills']);
 Route::get('get-brands', [FrontendController::class, 'brands']);
 Route::get('job-categories', [FrontendController::class, 'jobCategories']);
 Route::get('get-products', [FrontendController::class, 'products']);
+Route::get('exchange-products', [FrontendController::class, 'exchangeProducts']);
 Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
 Route::get('educations', [FrontendController::class, 'education']);
 Route::get('blood-categories', [FrontendController::class, 'bloodCategories']);

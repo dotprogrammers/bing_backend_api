@@ -45,28 +45,40 @@ class FrontendController extends Controller
 
     public function products(Request $request)
     {
-        $search = $request->search ?? null;
-        $limit = $request->limit ?? 10;
+        $products = Product::select('products.id', 'products.name', 'products.price', 'products.image', 'products.condition')
+            ->where('is_exchange', 0)
+            ->where('is_delete', 0)
+            ->get();
 
-        $prosucts = Product::select('products.id','products.name','products.price', 'products.image', 'products.condition')->where('is_delete', 0);
-
-        if ($search) {
-            $prosucts->where('name', 'like', "%$search%");
-        }
-
-        $prosucts = $prosucts->paginate($limit);
-
-        $prosucts->getCollection()->transform(function ($product) {
+        $products->map(function ($product) {
             $product->image = url('uploads/products/image/' . $product->image);
-           
             return $product;
         });
 
         return response()->json([
             'success' => true,
-            'data' => $prosucts
+            'data' => $products
         ], 200);
     }
+
+    public function exchangeProducts(Request $request)
+    {
+        $products = Product::select('products.id', 'products.name', 'products.price', 'products.image', 'products.condition')
+            ->where('is_exchange', 1)
+            ->where('is_delete', 0)
+            ->get();
+
+        $products->map(function ($product) {
+            $product->image = url('uploads/products/image/' . $product->image);
+            return $product;
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ], 200);
+    }
+
 
     public function productDetail($id)
     {
@@ -104,5 +116,4 @@ class FrontendController extends Controller
             'data' => $query
         ]);
     }
-
 }

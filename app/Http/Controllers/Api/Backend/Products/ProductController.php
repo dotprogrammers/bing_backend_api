@@ -63,6 +63,7 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->condition = $request->condition;
         $product->description = $request->description;
+        $product->is_exchange = $request->is_exchange;
         if ($request->hasFile('image')) { 
             $image = $request->file('image');
             $name = time() . '.' . $image->getClientOriginalExtension();
@@ -125,6 +126,7 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->condition = $request->condition;
         $product->description = $request->description;
+        $product->is_exchange = $request->is_exchange;
         $product->status = $request->status;
         if ($request->hasFile('image')) { 
             $oldLogo = $product->image;

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('condition')->nullable();
             $table->text('description')->nullable();
             $table->integer('is_delete')->default(0);
+            $table->integer('is_exchange')->default(0);
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
