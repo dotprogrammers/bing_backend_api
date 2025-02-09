@@ -43,7 +43,6 @@ Route::get('educations', [FrontendController::class, 'education']);
 Route::get('blood-categories', [FrontendController::class, 'bloodCategories']);
 Route::post('product-booking', [FrontendController::class, 'productBooking']);
 
-
 Route::get('email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
 
 Route::middleware('auth:sanctum')->group(function () {

@@ -168,37 +168,43 @@ class AuthController extends Controller
             'email' => 'required|email|exists:user_details,email',
         ]);
 
-        $user_detail = UserDetail::where('email', $request->email)->first();
+        $userDetail = UserDetail::where('email', $request->email)->first();
 
-        if (!$user_detail) {
+        if (!$userDetail) {
+            return response()->json(['message' => 'User details not found.'], 404);
+        }
+
+        $user = User::find($userDetail->user_id);
+
+        if (!$user) {
             return response()->json(['message' => 'User not found.'], 404);
         }
 
-        if ($user_detail->hasVerifiedEmail()) {
+        if ($userDetail->is_email_verified) {
             return response()->json(['message' => 'Email already verified.'], 400);
         }
 
-        $user_detail->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
 
         return response()->json(['message' => 'Verification link sent.']);
     }
 
     public function verifyEmail(Request $request, $id, $hash)
     {
+        $userDetail = UserDetail::where('user_id', $id)->first();
+
+        if (!$userDetail) {
+            return response()->json(['message' => 'User details not found.'], 404);
+        }
+
         $user = User::find($id);
 
         if (!$user) {
             return response()->json(['message' => 'User not found.'], 404);
         }
 
-        if (!hash_equals(sha1($user->getEmailForVerification()), $hash)) {
+        if (!hash_equals(sha1($userDetail->email), $hash)) {
             return response()->json(['message' => 'Invalid verification link.'], 403);
-        }
-
-        $userDetail = UserDetail::where('user_id', $id)->first();
-
-        if (!$userDetail) {
-            return response()->json(['message' => 'User details not found.'], 404);
         }
 
         if ($userDetail->is_email_verified) {
