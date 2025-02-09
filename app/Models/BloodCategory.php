@@ -12,6 +12,6 @@ class BloodCategory extends Model
     protected $fillable = ['name'];
 
     public function userDetaile(){
-        return $this->hasMany(UserDetail::class, 'blood_group', 'name');
+        return $this->hasMany(UserDetail::class, 'blood_group');
     }
 }
