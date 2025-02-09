@@ -73,7 +73,7 @@ class ProfileController extends Controller
             ->where('user_id', $user->id)
             ->first();
 
-        $user_detail->blood_group = BloodCategory::all();
+        $user_detail->blood_group = BloodCategory::where('is_delete', 0)->get();
 
         $user_detail->profile_picture_url = url($user_detail->profile_picture);
         $user_detail->cover_photo_url = url($user_detail->cover_photo);
