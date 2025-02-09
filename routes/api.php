@@ -47,8 +47,6 @@ Route::post('product-booking', [FrontendController::class, 'productBooking']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
-});
-
 
 // Jobs routes
 Route::prefix('job')->group(function () {
@@ -67,7 +65,7 @@ Route::prefix('profile')->group(function () {
 // Blood Donate routes
 Route::get('donate/{id}', [BloodDonateController::class, 'index']);
 
-
+});
 
  // Routes for Admin Role
  Route::middleware(['auth:sanctum', 'role_check:admin'])->group(function () {
