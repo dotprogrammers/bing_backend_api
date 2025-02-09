@@ -34,9 +34,4 @@ class UserDetail extends Model
         'is_delete',
         'status'
     ];
-
-    public function bloodGroup()
-    {
-        return $this->belongsTo(BloodCategory::class, 'blood_group');
-    }
 }
