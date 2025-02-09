@@ -8,29 +8,14 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-    // public function storeOrUpdate(Request $request)
-    // {
-    //     $user_detail = UserDetail::find($request->id) ?? new UserDetail();
-
-    //     $user_detail->fill($request->only([
-    //         'profile_picture', 'cover_photo', 'bio', 'date_of_birth', 'phone',
-    //         'is_phone_verified', 'email', 'is_email_verified', 'f_name', 'l_name',
-    //         'age', 'price', 'height', 'work_type', 'educations', 'skills',
-    //         'experiences', 'keyword', 'is_favourite'
-    //     ]));
-
-    //     $user_detail->save();
-
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'Saved successfully',
-    //         'user_detail' => $user_detail
-    //     ]);
-    // }
-
     public function storeOrUpdate(Request $request)
     {
-        $user_detail = UserDetail::find($request->id) ?? new UserDetail();
+        $user = auth()->user();
+        if($user){
+            $user_detail = UserDetail::where('user_id', $user->id)->first();
+        }else{
+            $user_detail = new UserDetail();
+        }
 
         if ($request->hasFile('profile_picture')) {
             if ($user_detail->profile_picture && file_exists(public_path($user_detail->profile_picture))) {
