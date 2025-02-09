@@ -44,9 +44,11 @@ Route::get('blood-categories', [FrontendController::class, 'bloodCategories']);
 Route::post('product-booking', [FrontendController::class, 'productBooking']);
 
 
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('/email/verification-notification', [AuthController::class, 'sendVerificationEmail']);
 
 // Jobs routes
 Route::prefix('job')->group(function () {

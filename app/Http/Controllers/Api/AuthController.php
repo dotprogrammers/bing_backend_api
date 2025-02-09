@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use App\Services\SmsService;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\JsonResponse;
 
 
 use function Symfony\Component\String\b;
@@ -62,7 +65,6 @@ class AuthController extends Controller
                 'token' => $token,
                 'role' => $user->roles->pluck('name'),
             ]);
-
         } catch (\Exception $e) {
             // throw $e;
             DB::rollBack();
@@ -80,25 +82,25 @@ class AuthController extends Controller
             'mobile_number' => 'required|numeric',
             'otp' => 'required|numeric',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 422,
                 'errors' => $validator->errors(),
             ], 422);
         }
-    
+
         $user = User::where('mobile_number', $request->mobile_number)
-                    ->where('sms_otp', $request->otp)
-                    ->first();
-    
+            ->where('sms_otp', $request->otp)
+            ->first();
+
         if (!$user) {
             return response()->json([
                 'status' => 401,
                 'message' => 'Invalid OTP or mobile number.',
             ], 401);
         }
-    
+
         $user->update([
             'sms_status' => true,
             'sms_otp' => null,
@@ -157,5 +159,38 @@ class AuthController extends Controller
                 'message' => 'Something went wrong'
             ]);
         }
+    }
+
+    public function sendVerificationEmail(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email already verified.'], 400);
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return response()->json(['message' => 'Verification link sent.']);
+    }
+
+    public function verifyEmail(Request $request, $id, $hash)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+        if (!hash_equals(sha1($user->getEmailForVerification()), $hash)) {
+            return response()->json(['message' => 'Invalid verification link.'], 403);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email already verified.'], 400);
+        }
+
+        $user->markEmailAsVerified();
+        event(new Verified($user));
+
+        return response()->json(['message' => 'Email successfully verified.']);
     }
 }
