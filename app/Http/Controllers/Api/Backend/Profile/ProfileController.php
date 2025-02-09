@@ -79,7 +79,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function show()
+    public function show(Request $request)
     {
         $user = auth()->user();
         $user_detail = UserDetail::where('user_id', $user->id)->first();
