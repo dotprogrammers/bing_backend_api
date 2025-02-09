@@ -13,23 +13,27 @@ class BloodDonateController extends Controller
     {
         $search = $request->search ?? null;
         $location = $request->location ?? null;
+        $categoryId = $request->category_id ?? null;
 
         $bloodCategory = BloodCategory::where('is_delete', 0)
             ->when($search, function ($query, $search) {
-                return $query->where('blood_categories.name', 'LIKE', "%{$search}%");
+                return $query->where('name', 'LIKE', "%{$search}%");
             })
             ->get();
 
         $userDetails = UserDetail::where('is_delete', 0)
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
-                    $q->where('user_details.phone', 'LIKE', "%{$search}%")
-                        ->orWhere('user_details.team', 'LIKE', "%{$search}%")
-                        ->orWhere('user_details.f_name', 'LIKE', "%{$search}%");
+                    $q->where('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('team', 'LIKE', "%{$search}%")
+                        ->orWhere('f_name', 'LIKE', "%{$search}%");
                 });
             })
             ->when($location, function ($query, $location) {
                 return $query->where('location', 'LIKE', "%{$location}%");
+            })
+            ->when($categoryId, function ($query, $categoryId) {
+                return $query->where('blood_group', $categoryId);
             })
             ->get();
 
