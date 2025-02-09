@@ -18,8 +18,6 @@ return new class extends Migration
             $table->text('profile_picture')->nullable();
             $table->longText('bio')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->integer('phone')->nullable();
-            $table->integer('is_phone_verified')->default(0)->nullable()->comment('0 = Not Verified, 1 = Verified');
             $table->string('f_name')->nullable();
             $table->string('l_name')->nullable();
             $table->unsignedBigInteger('blood_group')->nullable()->comment('Blood Category ID');
