@@ -79,9 +79,9 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show()
     {
-        $user_detail = UserDetail::find($id);
+        $user_detail = UserDetail::where('user_id', auth()->user()->id)->first();
 
         $user_detail->profile_picture_url = url($user_detail->profile_picture);
         $user_detail->cover_photo_url = url($user_detail->cover_photo);

@@ -60,7 +60,7 @@ Route::prefix('job')->group(function () {
 // Profile routes
 Route::prefix('profile')->group(function () {
     Route::post('/store', [ProfileController::class, 'storeOrUpdate']);
-    Route::get('/show/{id}', [ProfileController::class, 'show']);
+    Route::get('/show-profile', [ProfileController::class, 'show']);
 });
 
 
