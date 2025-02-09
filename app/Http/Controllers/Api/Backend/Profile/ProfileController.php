@@ -73,7 +73,7 @@ class ProfileController extends Controller
         $user = User::select('users.id', 'users.email', 'user_details.*', 'blood_categories.name as blood_group_name')
             ->leftJoin('user_details', 'users.id', '=', 'user_details.user_id')
             ->leftJoin('blood_categories', 'blood_categories.id', '=', 'user_details.blood_group')
-            ->where('id', $user->id)
+            ->where('users.id', $user->id)
             ->first();
 
         $blood_group = BloodCategory::select('id', 'name')->where('is_delete', 0)->get();
