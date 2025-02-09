@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Backend\Profile;
 
 use App\Http\Controllers\Controller;
+use App\Models\BloodCategory;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 
@@ -71,6 +72,8 @@ class ProfileController extends Controller
             ->leftJoin('blood_categories', 'blood_categories.id', '=', 'user_details.blood_group')
             ->where('user_id', $user->id)
             ->first();
+
+        $user_detail->blood_group = BloodCategory::all();
 
         $user_detail->profile_picture_url = url($user_detail->profile_picture);
         $user_detail->cover_photo_url = url($user_detail->cover_photo);
