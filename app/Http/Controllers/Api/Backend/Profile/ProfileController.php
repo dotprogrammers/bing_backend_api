@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Backend\Profile;
 use App\Http\Controllers\Controller;
 use App\Models\BloodCategory;
 use App\Models\UserDetail;
+use Faker\Core\Blood;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -73,14 +74,15 @@ class ProfileController extends Controller
             ->where('user_id', $user->id)
             ->first();
 
-        $user_detail->blood_group = BloodCategory::where('is_delete', 0)->get();
-
         $user_detail->profile_picture_url = url($user_detail->profile_picture);
         $user_detail->cover_photo_url = url($user_detail->cover_photo);
 
+        $blood_group = BloodCategory::select('id', 'name')->where('is_delete', 0)->get();
+
         return response()->json([
             'status' => 'success',
-            'user_detail' => $user_detail
+            'user_detail' => $user_detail,
+            'blood_group' => $blood_group
         ]);
     }
 }
