@@ -19,9 +19,9 @@ return new class extends Migration
             $table->longText('bio')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->integer('phone')->nullable();
-            $table->integer('is_phone_verified')->default(0)->nullable()->comment('0 = Not Verified, 1 = Verified');
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('email')->nullable();
-            $table->integer('is_email_verified')->default(0)->nullable()->comment('0 = Not Verified, 1 = Verified');
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('f_name')->nullable();
             $table->string('l_name')->nullable();
             $table->unsignedBigInteger('blood_group')->nullable()->comment('Blood Category ID');
