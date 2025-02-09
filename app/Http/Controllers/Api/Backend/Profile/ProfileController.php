@@ -50,18 +50,18 @@ class ProfileController extends Controller
             $user_detail->cover_photo = $coverDestinationPath . '/' . $coverImageName;
         }
 
-        $user_detail->bio = $request->bio;
-        $user_detail->date_of_birth = $request->date_of_birth;
-        $user_detail->blood_group = $request->blood_group;
-        $user_detail->team = $request->team;
-        $user_detail->location = $request->location;
-        $user_detail->description = $request->description;
-        $user_detail->gender = $request->gender;
-        $user_detail->city = $request->city;
-        $user_detail->upazila = $request->upazila;
-        $user_detail->skill = $request->skill;
-        $user_detail->education = $request->education;
-        $user_detail->is_available = $request->is_available;
+        $user_detail->bio = $request->bio ?? $user_detail->bio;
+        $user_detail->date_of_birth = $request->date_of_birth ?? $user_detail->date_of_birth;
+        $user_detail->blood_group = $request->blood_group ?? $user_detail->blood_group;
+        $user_detail->team = $request->team ?? $user_detail->team;
+        $user_detail->location = $request->location ?? $user_detail->location;
+        $user_detail->description = $request->description ?? $user_detail->description;
+        $user_detail->gender = $request->gender ?? $user_detail->gender;
+        $user_detail->city = $request->city ?? $user_detail->city;
+        $user_detail->upazila = $request->upazila ?? $user_detail->upazila;
+        $user_detail->skill = $request->skill ?? $user_detail->skill;
+        $user_detail->education = $request->education ?? $user_detail->education;
+        $user_detail->is_available = $request->is_available ?? $user_detail->is_available;
 
         $user_detail->save();
 
