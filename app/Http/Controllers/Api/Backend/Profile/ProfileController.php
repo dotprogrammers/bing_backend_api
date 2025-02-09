@@ -69,7 +69,8 @@ class ProfileController extends Controller
     public function show(Request $request)
     {
         $user = auth()->user();
-        $user_detail = UserDetail::select('user_details.*', 'blood_categories.name as blood_group_name')
+        $user_detail = UserDetail::select('user_details.*', 'users.email', 'blood_categories.name as blood_group_name')
+            ->leftJoin('users', 'users.id', '=', 'user_details.user_id')
             ->leftJoin('blood_categories', 'blood_categories.id', '=', 'user_details.blood_group')
             ->where('user_id', $user->id)
             ->first();
