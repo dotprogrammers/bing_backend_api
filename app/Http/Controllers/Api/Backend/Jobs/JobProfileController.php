@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Backend\Jobs;
 
 use App\Http\Controllers\Controller;
+use App\Models\JobCategory;
 use App\Models\JobProfile;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,12 @@ class JobProfileController extends Controller
         $categoryId = $request->category_id ?? null;
 
         $job_profiles = JobProfile::where('category_id', $categoryId)->get();
+        $categories = JobCategory::where('is_delete', 0)->get();
 
         return response()->json([
             'status' => 'success',
-            'data' => $job_profiles
+            'data' => $job_profiles,
+            'categories' => $categories
         ]);
     }
 

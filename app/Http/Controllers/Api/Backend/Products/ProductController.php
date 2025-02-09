@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Backend\Products;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -32,9 +33,12 @@ class ProductController extends Controller
             return $product;
         });
 
+        $categories = Category::where('is_delete', 0)->get();
+
         return response()->json([
             'success' => true,
-            'data' => $prosucts
+            'data' => $prosucts,
+            'categories' => $categories
         ], 200);
     }
 
