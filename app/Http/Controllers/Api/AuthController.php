@@ -167,24 +167,14 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email|exists:user_details,email',
         ]);
-
+        
         $userDetail = UserDetail::where('email', $request->email)->first();
 
         if (!$userDetail) {
             return response()->json(['message' => 'User details not found.'], 404);
         }
 
-        $user = User::find($userDetail->user_id);
-
-        if (!$user) {
-            return response()->json(['message' => 'User not found.'], 404);
-        }
-
-        if ($userDetail->is_email_verified) {
-            return response()->json(['message' => 'Email already verified.'], 400);
-        }
-
-        $user->sendEmailVerificationNotification();
+        $userDetail->sendEmailVerificationNotification();
 
         return response()->json(['message' => 'Verification link sent.']);
     }

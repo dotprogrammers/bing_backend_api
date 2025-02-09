@@ -4,10 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class UserDetail extends Model
+class UserDetail extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory;
+    // use HasFactory;
+    use HasFactory, HasRoles, HasApiTokens, Notifiable;
 
     protected $fillable = [
         'user_id',
