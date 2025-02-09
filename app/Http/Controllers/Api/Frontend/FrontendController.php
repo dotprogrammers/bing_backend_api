@@ -110,27 +110,12 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function bloodCategories(Request $request)
+    public function bloodCategories()
     {
-        $search = $request->search ?? null;
-        $location = $request->location ?? null;
-
-        $query = BloodCategory::with(['userDetaile' => function($query) use ($location) {
-            if ($location) {
-                $query->where('location', $location);
-            }
-        }])
-        ->where('is_delete', 0);
-
-        if ($search) {
-            $query->where('name', 'like', '%' . $search . '%');
-        }
-
-        $result = $query->get();
-
+        $query = BloodCategory::where('is_delete', 0)->get();
         return response()->json([
             'status' => true,
-            'data' => $result
+            'data' => $query
         ]);
     }
 

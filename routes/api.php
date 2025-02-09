@@ -65,7 +65,7 @@ Route::prefix('profile')->group(function () {
 
 
 // Blood Donate routes
-Route::get('donate/{id}', [BloodDonateController::class, 'index']);
+Route::get('donate-blood', [BloodDonateController::class, 'index']);
 
 });
 
