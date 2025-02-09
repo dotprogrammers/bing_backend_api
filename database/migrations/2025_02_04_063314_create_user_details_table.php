@@ -18,8 +18,6 @@ return new class extends Migration
             $table->text('profile_picture')->nullable();
             $table->longText('bio')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->string('f_name')->nullable();
-            $table->string('l_name')->nullable();
             $table->unsignedBigInteger('blood_group')->nullable()->comment('Blood Category ID');
             $table->string('team')->nullable()->comment('Blood Group Team');
             $table->string('location')->nullable()->comment('Blood Group Location');
