@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Backend\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Models\BloodCategory;
+use App\Models\User;
 use App\Models\UserDetail;
 use Faker\Core\Blood;
 use Illuminate\Http\Request;
@@ -13,9 +14,9 @@ class ProfileController extends Controller
     public function storeOrUpdate(Request $request)
     {
         $user = auth()->user();
-        if($user){
+        if ($user) {
             $user_detail = UserDetail::where('user_id', $user->id)->first();
-        }else{
+        } else {
             $user_detail = new UserDetail();
         }
 
@@ -69,17 +70,17 @@ class ProfileController extends Controller
     public function show(Request $request)
     {
         $user = auth()->user();
-        $user_detail = UserDetail::select('user_details.*', 'users.email', 'blood_categories.name as blood_group_name')
-            ->leftJoin('users', 'users.id', '=', 'user_details.user_id')
+        $user = User::select('users.id', 'users.email', 'user_details.*', 'blood_categories.name as blood_group_name')
+            ->leftJoin('user_details', 'users.id', '=', 'user_details.user_id')
             ->leftJoin('blood_categories', 'blood_categories.id', '=', 'user_details.blood_group')
-            ->where('user_id', $user->id)
+            ->where('id', $user->id)
             ->first();
 
         $blood_group = BloodCategory::select('id', 'name')->where('is_delete', 0)->get();
 
         return response()->json([
             'status' => 'success',
-            'user_detail' => $user_detail,
+            'user_detail' => $user,
             'blood_group' => $blood_group
         ]);
     }
