@@ -82,7 +82,10 @@ class ProfileController extends Controller
     public function show(Request $request)
     {
         $user = auth()->user();
-        $user_detail = UserDetail::where('user_id', $user->id)->first();
+        $user_detail = UserDetail::select('user_details.*', 'blood_categories.name as blood_group_name')
+            ->leftJoin('blood_categories', 'blood_categories.id', '=', 'user_details.blood_group')
+            ->where('user_id', $user->id)
+            ->first();
 
         $user_detail->profile_picture_url = url($user_detail->profile_picture);
         $user_detail->cover_photo_url = url($user_detail->cover_photo);
