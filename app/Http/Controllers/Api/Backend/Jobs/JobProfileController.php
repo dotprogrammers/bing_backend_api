@@ -22,7 +22,12 @@ class JobProfileController extends Controller
 
     public function storeOrUpdate(Request $request)
     {
-        $job_profile = JobProfile::find($request->id) ?? new JobProfile();
+        $user = auth()->user();
+        if($user){
+            $job_profile = JobProfile::where('user_id', $user->id)->first();
+        }else{
+            $job_profile = new JobProfile();
+        }
 
         if ($request->hasFile('profile_picture')) {
             if ($job_profile->profile_picture && file_exists(public_path($job_profile->profile_picture))) {

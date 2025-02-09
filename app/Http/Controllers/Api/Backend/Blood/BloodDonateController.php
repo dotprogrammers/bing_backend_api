@@ -12,7 +12,7 @@ class BloodDonateController extends Controller
     public function index(Request $request)
     {
         $search = $request->search ?? null;
-        $location = $request->location ?? null;
+        $location = $request->location ? trim(urldecode($request->location)) : null;
         $categoryId = $request->category_id ?? null;
 
         $bloodCategory = BloodCategory::where('is_delete', 0)
@@ -30,7 +30,7 @@ class BloodDonateController extends Controller
                 });
             })
             ->when($location, function ($query, $location) {
-                return $query->where('location', 'LIKE', "%{$location}%");
+                return $query->whereRaw('LOWER(TRIM(location)) LIKE ?', ["%" . strtolower($location) . "%"]);
             })
             ->when($categoryId, function ($query, $categoryId) {
                 return $query->where('blood_group', $categoryId);

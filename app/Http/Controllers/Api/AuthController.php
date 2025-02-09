@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -174,8 +175,13 @@ class AuthController extends Controller
 
     public function verifyEmail(Request $request, $id, $hash)
     {
-        $user = User::find($id);
+        $userDetail = UserDetail::where('user_id', $id)->first();
 
+        if (!$userDetail) {
+            return response()->json(['message' => 'User details not found.'], 404);
+        }
+
+        $user = User::find($id);
         if (!$user) {
             return response()->json(['message' => 'User not found.'], 404);
         }
@@ -184,12 +190,11 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid verification link.'], 403);
         }
 
-        if ($user->hasVerifiedEmail()) {
+        if ($userDetail->is_email_verified) {
             return response()->json(['message' => 'Email already verified.'], 400);
         }
 
-        $user->markEmailAsVerified();
-        event(new Verified($user));
+        $userDetail->update(['is_email_verified' => 1]);
 
         return response()->json(['message' => 'Email successfully verified.']);
     }
