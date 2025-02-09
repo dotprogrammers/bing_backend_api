@@ -15,6 +15,10 @@ class BloodDonateController extends Controller
         $location = $request->location ? trim(urldecode($request->location)) : null;
         $categoryId = $request->category_id ?? null;
 
+        if ($location) {
+            $location = preg_replace('/^.*?,\s*/', '', $location);
+        }
+
         $bloodCategory = BloodCategory::where('is_delete', 0)
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'LIKE', "%{$search}%");
