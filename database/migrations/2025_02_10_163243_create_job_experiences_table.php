@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('skill_jobs', function (Blueprint $table) {
+        Schema::create('job_experiences', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->unsignedBigInteger('user_id');
+            $table->string('job_category')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('company_location')->nullable();
+            $table->string('experience')->nullable();
             $table->timestamps();
         });
     }
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('skill_jobs');
+        Schema::dropIfExists('job_experiences');
     }
 };

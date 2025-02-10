@@ -14,24 +14,16 @@ return new class extends Migration
         Schema::create('job_profiles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('job_category_id')->nullable();
             $table->text('profile_picture')->nullable();
             $table->text('cover_photo')->nullable();
             $table->longText('bio')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->integer('phone')->nullable();
-            $table->integer('is_phone_verified')->default(0)->nullable()->comment('0 = Not Verified, 1 = Verified');
-            $table->string('email')->nullable();
-            $table->integer('is_email_verified')->default(0)->nullable()->comment('0 = Not Verified, 1 = Verified');
-            $table->string('f_name')->nullable();
-            $table->string('l_name')->nullable();
+            $table->string('name')->nullable();
             $table->integer('age')->nullable();
             $table->integer('price')->nullable();
             $table->float('height')->nullable();
             $table->string('work_type')->nullable();
-            $table->json('educations')->nullable();
-            $table->json('skills')->nullable();
-            $table->json('experiences')->nullable();
             $table->longText('keyword')->nullable();
             $table->boolean('is_favourite')->default(0)->nullable()->comment('0 = Not Favourite, 1 = Favourite');
             $table->integer('is_delete')->default(0)->nullable()->comment('0 = Not Deleted, 1 = Deleted');

@@ -83,13 +83,6 @@ Route::get('donate-blood', [BloodDonateController::class, 'index']);
         Route::delete('/delete/{id}', [CategoryController::class, 'destroy']);
     });
 
-// skill
-    Route::get('/skills',[CategoryController::class,'getSkill']);
-    Route::post('/skills/store',[CategoryController::class,'storeSkill']);
-    // Route::get('show/{id}',[CategoryController::class,'show']);
-    Route::post('/skills/update',[CategoryController::class,'updateSkill']);
-    Route::delete('/skills/delete/{id}',[CategoryController::class,'deleteSkill']);
-
     // Brand routes
     Route::prefix('brands')->group(function () {
         Route::get('/', [BrandController::class, 'index']);
