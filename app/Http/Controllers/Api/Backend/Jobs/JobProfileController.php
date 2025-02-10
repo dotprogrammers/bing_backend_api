@@ -31,7 +31,6 @@ class JobProfileController extends Controller
             'user_details.bio',
             'user_details.blood_group',
             'user_details.location',
-            'user_details.work_type',
             'job_profiles.profile_picture as job_profile_picture',
             'job_profiles.cover_photo as job_cover_photo',
             'job_profiles.bio as job_bio',
@@ -51,7 +50,6 @@ class JobProfileController extends Controller
             $users->where('job_profiles.job_category_id', $categoryId);
         }
 
-        $users = $users->get();
 
         $job_profiles = JobProfile::when($categoryId, function ($query) use ($categoryId) {
             return $query->where('job_category_id', $categoryId);
