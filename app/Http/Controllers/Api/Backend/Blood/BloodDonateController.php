@@ -25,7 +25,7 @@ class BloodDonateController extends Controller
             })
             ->get();
 
-        $userDetails = UserDetail::where('is_delete', 0)
+        $userDetails = UserDetail::with('user')->where('is_delete', 0)
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('phone', 'LIKE', "%{$search}%")

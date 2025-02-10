@@ -28,4 +28,9 @@ class UserDetail extends Model
         'is_delete',
         'status'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
