@@ -72,7 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/delete/{id}', [RentController::class, 'destroy']);
         Route::get('/mark-as-favourite/{id}', [RentController::class, 'markAsFavouriteRent']);
         Route::get('/removed-as-favourite/{id}', [RentController::class, 'removedFavouriteRent']);
-        Route::get('/rent-list', [RentController::class, 'rentList']);
+        Route::get('/favourite-list', [RentController::class, 'rentList']);
     });
 
 
