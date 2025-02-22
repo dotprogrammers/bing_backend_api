@@ -135,33 +135,38 @@ class JobProfileController extends Controller
             $job_profile->is_favourite = $request->is_favourite;
             $job_profile->save();
 
-            $education_detail = new EducationDetails();
-            $education_detail->user_id = $user->id;
-            $education_detail->education_id = $request->education_id;
-            $education_detail->institute_name = $request->institute_name;
-            $education_detail->board = $request->board;
-            $education_detail->gpa = $request->gpa;
-            $education_detail->passing_year = $request->passing_year;
-            $education_detail->subject = $request->subject;
-            $education_detail->save();
+            if ($request->education_details) {
+                $education_detail = new EducationDetails();
+                $education_detail->user_id = $user->id;
+                $education_detail->education_id = $request->education_id;
+                $education_detail->institute_name = $request->institute_name;
+                $education_detail->board = $request->board;
+                $education_detail->gpa = $request->gpa;
+                $education_detail->passing_year = $request->passing_year;
+                $education_detail->subject = $request->subject;
+                $education_detail->save();
+            }
 
-            $job_skill = new JobSkill();
-            $job_skill->user_id = $user->id;
-            $job_skill->title = $request->title;
-            $job_skill->skill_category = $request->skill_category;
-            $job_skill->description = $request->description;
-            $job_skill->link_type = $request->link_type;
-            $job_skill->link = $request->link;
-            $job_skill->save();
+            if ($request->job_skills) {
+                $job_skill = new JobSkill();
+                $job_skill->user_id = $user->id;
+                $job_skill->title = $request->title;
+                $job_skill->skill_category = $request->skill_category;
+                $job_skill->description = $request->description;
+                $job_skill->link_type = $request->link_type;
+                $job_skill->link = $request->link;
+                $job_skill->save();
+            }
 
-            $job_experience = new JobExperience();
-            $job_experience->user_id = $user->id;
-            $job_experience->job_category = $request->job_category;
-            $job_experience->company_name = $request->company_name;
-            $job_experience->company_location = $request->company_location;
-            $job_experience->experience = $request->experience;
-            $job_experience->save();
-
+            if ($request->job_experience) {
+                $job_experience = new JobExperience();
+                $job_experience->user_id = $user->id;
+                $job_experience->job_category = $request->job_category;
+                $job_experience->company_name = $request->company_name;
+                $job_experience->company_location = $request->company_location;
+                $job_experience->experience = $request->experience;
+                $job_experience->save();
+            }
 
             DB::commit();
             return response()->json([
