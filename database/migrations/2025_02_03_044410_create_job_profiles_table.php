@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('age')->nullable();
             $table->integer('price')->nullable();
             $table->float('height')->nullable();
+            $table->string('location')->nullable();
             $table->string('work_type')->nullable();
             $table->longText('keyword')->nullable();
             $table->boolean('is_favourite')->default(0)->nullable()->comment('0 = Not Favourite, 1 = Favourite');

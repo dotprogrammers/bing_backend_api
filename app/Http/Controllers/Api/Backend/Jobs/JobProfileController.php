@@ -132,6 +132,7 @@ class JobProfileController extends Controller
             $job_profile->height = $request->height;
             $job_profile->work_type = $request->work_type;
             $job_profile->keyword = $request->keyword;
+            $job_profile->location = $request->location;
             $job_profile->is_favourite = $request->is_favourite;
             $job_profile->save();
 
