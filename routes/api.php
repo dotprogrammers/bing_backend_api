@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Backend\Jobs\JobProfileController;
 use App\Http\Controllers\Api\Backend\Products\ProductController;
 use App\Http\Controllers\Api\Backend\Profile\ProfileController;
 use App\Http\Controllers\Api\Frontend\FrontendController;
+use App\Http\Controllers\Rent\RentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -49,27 +50,38 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('email/verification-notification', [AuthController::class, 'sendVerificationEmail']);
 
-// Jobs routes
-Route::prefix('job')->group(function () {
-    Route::get('/', [JobProfileController::class, 'index']);
-    Route::post('/store', [JobProfileController::class, 'storeOrUpdate']);
-    Route::get('/show/{id}', [JobProfileController::class, 'show']);
+    // Jobs routes
+    Route::prefix('job')->group(function () {
+        Route::get('/', [JobProfileController::class, 'index']);
+        Route::post('/store', [JobProfileController::class, 'storeOrUpdate']);
+        Route::get('/show/{id}', [JobProfileController::class, 'show']);
+    });
+
+    // Profile routes
+    Route::prefix('profile')->group(function () {
+        Route::post('/store', [ProfileController::class, 'storeOrUpdate']);
+        Route::get('/show-profile', [ProfileController::class, 'show']);
+    });
+
+    // Rent routes
+    Route::prefix('rent')->group(function () {
+        Route::get('/', [RentController::class, 'index']);
+        Route::post('/store', [RentController::class, 'store']);
+        Route::get('/show/{id}', [RentController::class, 'show']);
+        Route::post('/update', [RentController::class, 'update']);
+        Route::delete('/delete/{id}', [RentController::class, 'destroy']);
+        Route::get('/mark-as-favourite/{id}', [RentController::class, 'markAsFavouriteRent']);
+        Route::get('/removed-as-favourite/{id}', [RentController::class, 'removedFavouriteRent']);
+        Route::get('/rent-list', [RentController::class, 'rentList']);
+    });
+
+
+    // Blood Donate routes
+    Route::get('donate-blood', [BloodDonateController::class, 'index']);
 });
 
-// Profile routes
-Route::prefix('profile')->group(function () {
-    Route::post('/store', [ProfileController::class, 'storeOrUpdate']);
-    Route::get('/show-profile', [ProfileController::class, 'show']);
-});
-
-
-// Blood Donate routes
-Route::get('donate-blood', [BloodDonateController::class, 'index']);
-
-});
-
- // Routes for Admin Role
- Route::middleware(['auth:sanctum', 'role_check:admin'])->group(function () {
+// Routes for Admin Role
+Route::middleware(['auth:sanctum', 'role_check:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return response()->json(['message' => 'Welcome to Admin Dashboard']);
     });
@@ -136,7 +148,6 @@ Route::get('donate-blood', [BloodDonateController::class, 'index']);
         Route::post('/update', [BookingController::class, 'update']);
         Route::delete('/delete/{id}', [BookingController::class, 'destroy']);
     });
-
 });
 
 // Routes for Vendor Role
