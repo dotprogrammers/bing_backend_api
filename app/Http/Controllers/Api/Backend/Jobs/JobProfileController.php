@@ -122,7 +122,7 @@ class JobProfileController extends Controller
                 $job_profile->cover_photo = 'uploads/job_profile/cover_photo/' . $coverImageName;
             }
 
-            $job_profile->user_id = $user->user_id;
+            $job_profile->user_id = $user->id;
             $job_profile->job_category_id = $request->job_category_id;
             $job_profile->bio = $request->bio;
             $job_profile->date_of_birth = $request->date_of_birth;
