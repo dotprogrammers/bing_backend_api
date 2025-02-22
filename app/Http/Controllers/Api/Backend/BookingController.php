@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductBooking;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -15,7 +15,7 @@ class BookingController extends Controller
         $start_date = $request->start_date ?? null;
         $end_date = $request->end_date ?? null;
 
-        $product_booking = ProductBooking::where('is_delete', 0);
+        $product_booking = Booking::where('is_delete', 0);
 
         if (!empty($search)) {
             $product_booking->where(function ($query) use ($search) {
@@ -43,10 +43,39 @@ class BookingController extends Controller
         ], 200);
     }
 
+    public function store(Request $request)
+    {
+        $booking = new Booking();
+        $booking->rent_id = $request->rent_id;
+        $booking->user_id = $request->user_id;
+        $booking->start_date = $request->start_date;
+        $booking->end_date = $request->end_date;
+        $booking->name = $request->name;
+        $booking->phone = $request->phone;
+        $booking->adult = $request->adult;
+        $booking->child = $request->child;
+        $booking->status = $request->status;
+        $booking->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking created successfully'
+        ]);
+    }
+
+    public function show($id)
+    {
+        $booking = Booking::find($id);
+        return response()->json([
+            'success' => true,
+            'data' => $booking
+        ], 200);
+    }
+
     public function update(Request $request)
     {
-        $booking = ProductBooking::find($request->id);
-        $booking->product_id = $request->product_id;
+        $booking = Booking::find($request->id);
+        $booking->rent_id = $request->rent_id;
         $booking->user_id = $request->user_id;
         $booking->start_date = $request->start_date;
         $booking->end_date = $request->end_date;
@@ -65,7 +94,7 @@ class BookingController extends Controller
 
     public function destroy(string $id)
     {
-        $booking = ProductBooking::find($id);
+        $booking = Booking::find($id);
         if (!$booking) {
             return response()->json([
                 'success' => false,

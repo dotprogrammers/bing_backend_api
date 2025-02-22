@@ -75,6 +75,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/favourite-list', [RentController::class, 'rentList']);
     });
 
+    // Product Booking routes
+    Route::prefix('booking')->group(function () {
+        Route::get('/list', [BookingController::class, 'index']);
+        Route::post('/store', [BookingController::class, 'store']);
+        Route::get('/show/{id}', [BookingController::class, 'show']);
+        Route::post('/update', [BookingController::class, 'update']);
+        Route::delete('/delete/{id}', [BookingController::class, 'destroy']);
+    });
+
 
     // Blood Donate routes
     Route::get('donate-blood', [BloodDonateController::class, 'index']);
@@ -139,14 +148,6 @@ Route::middleware(['auth:sanctum', 'role_check:admin'])->group(function () {
         Route::get('/show/{id}', [BloodCategoryController::class, 'show']);
         Route::post('/update', [BloodCategoryController::class, 'update']);
         Route::delete('/delete/{id}', [BloodCategoryController::class, 'destroy']);
-    });
-
-    // Product Booking routes
-    Route::prefix('product-booking')->group(function () {
-        Route::get('/list', [BookingController::class, 'index']);
-        Route::get('/show/{id}', [BookingController::class, 'show']);
-        Route::post('/update', [BookingController::class, 'update']);
-        Route::delete('/delete/{id}', [BookingController::class, 'destroy']);
     });
 });
 
