@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Rent;
+namespace App\Http\Controllers\Api\Backend\Rent;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rent;
@@ -13,8 +13,7 @@ class RentController extends Controller
     {
         $userId = Auth::id();
 
-        $rents = Rent::where('is_delete', 0)
-            ->where('user_id', '!=', $userId);
+        $rents = Rent::where('is_delete', 0);
 
         if ($request->has('category')) {
             $rents->where('category_id', $request->category);
@@ -24,8 +23,12 @@ class RentController extends Controller
             $rents->where('price', '<=', $request->price);
         }
 
-        if ($request->has('floor_area')) {
-            $rents->where('area_size', '>=', $request->floor_area);
+        if ($request->has('area_size')) {
+            $rents->where('area_size', '>=', $request->area_size);
+        }
+        
+        if ($request->has('floor_no')) {
+            $rents->where('floor_no', '>=', $request->floor_no);
         }
 
         if ($request->has('bedroom')) {
@@ -48,42 +51,6 @@ class RentController extends Controller
         ], 200);
     }
 
-
-    public function store(Request $request)
-    {
-        $rent = new Rent();
-        $rent->user_id = Auth::user()->id;
-        $rent->category_id = $request->category_id;
-        $rent->title = $request->title;
-        $rent->name = $request->name;
-        $rent->rent_type = $request->rent_type;
-        $rent->property_type = $request->property_type;
-        $rent->price = $request->price;
-        $rent->discount_price = $request->discount_price;
-        $rent->description = $request->description;
-        $rent->keyword = $request->keyword;
-        $rent->location = $request->location;
-        $rent->area_size = $request->area_size;
-        $rent->bedroom = $request->bedroom;
-        $rent->bathroom = $request->bathroom;
-        $rent->balcony = $request->balcony;
-        $rent->kitchen = $request->kitchen;
-        $rent->type = $request->type;
-        $rent->available_date = $request->available_date;
-
-        if ($request->hasFile('image')) {
-            $imageArray = [];
-            foreach ($request->file('image') as $file) {
-                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('uploads/rents/'), $filename);
-                $imageArray[] = $filename;
-            }
-            $rent->image = json_encode($imageArray);
-        }
-        $rent->save();
-
-        return response()->json(['message' => 'Rent added successfully'], 201);
-    }
 
     public function show($id)
     {
@@ -110,7 +77,7 @@ class RentController extends Controller
             }
         }
 
-        $rent->user_id = Auth::user()->id;
+        // $rent->user_id = Auth::user()->id;
         $rent->category_id = $request->category_id;
         $rent->title = $request->title;
         $rent->name = $request->name;
@@ -122,6 +89,7 @@ class RentController extends Controller
         $rent->keyword = $request->keyword;
         $rent->location = $request->location;
         $rent->area_size = $request->area_size;
+        $rent->floor_no = $request->floor_no;
         $rent->bedroom = $request->bedroom;
         $rent->bathroom = $request->bathroom;
         $rent->balcony = $request->balcony;
@@ -152,40 +120,4 @@ class RentController extends Controller
         return response()->json(['message' => 'Rent deleted successfully'], 200);
     }
 
-    public function markAsFavouriteRent($id)
-    {
-        $rent = Rent::find($id);
-        $rent->is_favourite = 1;
-        $rent->save();
-        return response()->json(['message' => 'Rent marked as favourite successfully'], 200);
-    }
-
-    public function removedFavouriteRent($id)
-    {
-        $rent = Rent::find($id);
-        $rent->is_favourite = 0;
-        $rent->save();
-        return response()->json(['message' => 'Rent removed from favourite successfully'], 200);
-    }
-
-    public function rentList(Request $request)
-    {
-        $search = $request->search ?? null;
-
-        $rents = Rent::where('is_delete', 0)
-            ->where('is_favourite', 1)
-            ->where('user_id', Auth::user()->id);
-
-        if ($search) {
-            $rents->where(function ($query) use ($search) {
-                $query->where('title', 'LIKE', "%$search%")
-                    ->orWhere('name', 'LIKE', "%$search%")
-                    ->orWhere('price', $search);
-            });
-        }
-
-        $rents = $rents->orderBy('created_at', 'desc')->paginate(10);
-
-        return response()->json(['data' => $rents], 200);
-    }
 }

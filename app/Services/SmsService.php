@@ -14,17 +14,20 @@ class SmsService
             $response = Http::withHeaders([
                 'accept' => 'application/json ',
             ])->post(config('sms.api_url'), [
+                'api_key' => config('sms.token')['default'],
                 'recipient' => '88' . $to,
                 'sender_id' => config('sms.sender_id'),
                 'type' => 'plain',
-                'message' => $message,
+                'msg' => $message,
             ]);
-            // Log::debug('SMS Payload:' , [
-            //     'recipient' => '880' . $to,
-            //     'sender_id' => $setting->sender_id,
-            //     'type' => 'plain',
-            //     'message' => $message,
-            // ]);
+            Log::debug('SMS Payload:' , [
+                'API_URL' => config('sms.api_url'),
+                'api_key' => config('sms.token')['default'],
+                'recipient' => '88' . $to,
+                'sender_id' => config('sms.sender_id'),
+                'type' => 'plain',
+                'msg' => $message,
+            ]);
 
             if($response->successful()){
                 Log::debug('SMS response is ok:' . $response->body());

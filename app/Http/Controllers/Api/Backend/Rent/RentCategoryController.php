@@ -1,26 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Api\Backend\Blood;
+namespace App\Http\Controllers\Api\Backend\Rent;
 
 use App\Http\Controllers\Controller;
-use App\Models\BloodCategory;
+use App\Models\RentCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BloodCategoryController extends Controller
+class RentCategoryController extends Controller
 {
     public function index(Request $request)
     {
         $search = $request->search ?? null;
         $limit = $request->limit ?? 10;
 
-        $queries = BloodCategory::where('is_delete', 0);
+        $queries = RentCategory::where('is_delete', 0)->paginate($limit);
 
         if ($search) {
             $queries->where('name', 'like', '%' . $search . '%');
         }
-
-        $queries = $queries->paginate($limit);
 
         return response()->json([
             'status' => true,
@@ -31,7 +29,8 @@ class BloodCategoryController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required'
+            'name' => 'required',
+            'slug' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -41,8 +40,9 @@ class BloodCategoryController extends Controller
             ]);
         }
 
-        $query = new BloodCategory();
+        $query = new RentCategory();
         $query->name = $request->name;
+        $query->slug = $request->slug;
         $query->save();
 
         return response()->json([
@@ -53,7 +53,7 @@ class BloodCategoryController extends Controller
 
     public function show($id)
     {
-        $query = BloodCategory::find($id);
+        $query = RentCategory::find($id);
         return response()->json([
             'status' => 'success',
             'data' => $query
@@ -62,7 +62,7 @@ class BloodCategoryController extends Controller
 
     public function update(Request $request)
     {
-        $query = BloodCategory::find($request->id);
+        $query = RentCategory::find($request->id);
         $query->name = $request->name;
         $query->status = $request->status;
         $query->save();
@@ -75,7 +75,7 @@ class BloodCategoryController extends Controller
 
     public function destroy($id)
     {
-        $query = BloodCategory::find($id);
+        $query = RentCategory::find($id);
         $query->is_delete = 1;
         $query->save();
 

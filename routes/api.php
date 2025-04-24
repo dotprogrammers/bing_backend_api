@@ -11,8 +11,12 @@ use App\Http\Controllers\Api\Backend\Education\EducationController;
 use App\Http\Controllers\Api\Backend\Jobs\JobProfileController;
 use App\Http\Controllers\Api\Backend\Products\ProductController;
 use App\Http\Controllers\Api\Backend\Profile\ProfileController;
+use App\Http\Controllers\Api\Frontend\UserController;
+use App\Http\Controllers\Api\Frontend\UserRentController;
 use App\Http\Controllers\Api\Frontend\FrontendController;
-use App\Http\Controllers\Rent\RentController;
+use App\Http\Controllers\Api\Backend\Rent\RentController;
+use App\Http\Controllers\Api\Backend\Rent\RentCategoryController;
+use App\Http\Controllers\Api\Backend\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +46,7 @@ Route::get('exchange-products', [FrontendController::class, 'exchangeProducts'])
 Route::get('product-detail/{id}', [FrontendController::class, 'productDetail']);
 Route::get('educations', [FrontendController::class, 'education']);
 Route::get('blood-categories', [FrontendController::class, 'bloodCategories']);
+Route::get('rent-categories', [FrontendController::class, 'rentCategories']);
 Route::post('product-booking', [FrontendController::class, 'productBooking']);
 
 Route::get('email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
@@ -64,16 +69,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Rent routes
-    Route::prefix('rent')->group(function () {
-        Route::get('/', [RentController::class, 'index']);
-        Route::post('/store', [RentController::class, 'store']);
-        Route::get('/show/{id}', [RentController::class, 'show']);
-        Route::post('/update', [RentController::class, 'update']);
-        Route::delete('/delete/{id}', [RentController::class, 'destroy']);
-        Route::get('/mark-as-favourite/{id}', [RentController::class, 'markAsFavouriteRent']);
-        Route::get('/removed-as-favourite/{id}', [RentController::class, 'removedFavouriteRent']);
-        Route::get('/favourite-list', [RentController::class, 'rentList']);
+    Route::apiResource('rents', UserRentController::class)->except(['create', 'edit']);
+    Route::prefix('rents')->controller(UserRentController::class)->group(function () {
+        Route::get('/mark-as-favourite/{id}', 'markAsFavouriteRent');
+        Route::get('/removed-as-favourite/{id}', 'removedFavouriteRent');
+        Route::get('/favourite-list', 'rentList');
     });
+    
 
     // Product Booking routes
     Route::prefix('booking')->group(function () {
@@ -87,13 +89,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Blood Donate routes
     Route::get('donate-blood', [BloodDonateController::class, 'index']);
+
+    // User routes
+    Route::prefix('user')->group(function () {
+        Route::post('/save-token', [UserController::class, 'saveToken']);
+    });
 });
 
-// Routes for Admin Role
-Route::middleware(['auth:sanctum', 'role_check:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return response()->json(['message' => 'Welcome to Admin Dashboard']);
-    });
+// Routes for Admin
+Route::prefix('admin')->middleware(['auth:sanctum', 'role_check:admin'])->group(function () {
+    Route::get('/dashboard', DashboardController::class);
 
     // Category routes
     Route::prefix('categories')->group(function () {
@@ -149,6 +154,19 @@ Route::middleware(['auth:sanctum', 'role_check:admin'])->group(function () {
         Route::post('/update', [BloodCategoryController::class, 'update']);
         Route::delete('/delete/{id}', [BloodCategoryController::class, 'destroy']);
     });
+
+    // Rent Category routes
+    Route::prefix('rent-category')->group(function () {
+        Route::get('/', [RentCategoryController::class, 'index']);
+        Route::post('/store', [RentCategoryController::class, 'store']);
+        Route::get('/show/{id}', [RentCategoryController::class, 'show']);
+        Route::post('/update', [RentCategoryController::class, 'update']);
+        Route::delete('/delete/{id}', [RentCategoryController::class, 'destroy']);
+    });
+
+    // Admin Rent routes
+    Route::apiResource('rents', RentController::class)->except(['create', 'store', 'edit']);
+
 });
 
 // Routes for Vendor Role

@@ -14,11 +14,13 @@ class EducationController extends Controller
         $search = $request->search ?? null;
         $limit = $request->limit ?? 10;
 
-        $queries = Education::where('is_delete', 0)->paginate($limit);
+        $queries = Education::where('is_delete', 0);
 
         if ($search) {
             $queries->where('name', 'like', '%' . $search . '%');
         }
+
+        $queries = $queries->paginate($limit);
 
         return response()->json([
             'status' => true,

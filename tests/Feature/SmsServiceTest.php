@@ -13,7 +13,7 @@ class SmsServiceTest extends TestCase
     {
         $smsService = new SmsService();
 
-        $response = $smsService->sendMessage('8801611996667', 'Test message');
+        $response = $smsService->sendMessage('01611996667', 'Test message');
 
         $this->assertEquals('success', $response['status']);
         $this->assertArrayHasKey('message', $response);

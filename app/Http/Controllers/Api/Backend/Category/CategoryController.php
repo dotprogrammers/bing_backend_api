@@ -69,7 +69,8 @@ class CategoryController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required'
+            'name' => 'required',
+            'status' => 'nullable|in:active,inactive'
         ]);
 
         if ($validator->fails()) {
@@ -85,6 +86,7 @@ class CategoryController extends Controller
         }
 
         $category->name = $request->name;
+        $category->status = $request->status ?? $category->status;
         $category->slug = Str::slug($request->name, '-');
         $category->save();
 

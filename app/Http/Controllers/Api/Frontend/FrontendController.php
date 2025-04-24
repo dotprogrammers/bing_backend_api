@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\BloodCategory;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Education;
-use App\Models\JobCategory;
+use App\Models\{JobCategory, RentCategory, BloodCategory};
 use App\Models\Product;
 use App\Models\ProductBooking;
 use Illuminate\Support\Facades\Validator;
@@ -113,6 +112,15 @@ class FrontendController extends Controller
     public function bloodCategories()
     {
         $query = BloodCategory::where('is_delete', 0)->get();
+        return response()->json([
+            'status' => true,
+            'data' => $query
+        ]);
+    }
+    
+    public function rentCategories()
+    {
+        $query = RentCategory::where('is_delete', 0)->get();
         return response()->json([
             'status' => true,
             'data' => $query

@@ -71,6 +71,7 @@ class BrandController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
+            'status' => 'nullable|in:active,inactive'
         ]);
 
         if ($validator->fails()) {
@@ -86,6 +87,7 @@ class BrandController extends Controller
         }
 
         $brand->name = $request->name;
+        $brand->status = $request->status ?? $brand->status;
         $brand->slug = Str::slug($request->name, '-');
         $brand->save();
 

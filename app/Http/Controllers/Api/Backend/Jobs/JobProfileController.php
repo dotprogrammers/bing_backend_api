@@ -82,9 +82,8 @@ class JobProfileController extends Controller
         try {
 
             $user = auth()->user();
-            if ($user) {
-                $job_profile = JobProfile::where('user_id', $user->id)->first();
-            } else {
+            $job_profile = JobProfile::where('user_id', $user->id)->first();
+            if(!$job_profile){
                 $job_profile = new JobProfile();
             }
 
