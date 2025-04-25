@@ -14,11 +14,12 @@ class RentCategoryController extends Controller
         $search = $request->search ?? null;
         $limit = $request->limit ?? 10;
 
-        $queries = RentCategory::where('is_delete', 0)->paginate($limit);
+        $queries = RentCategory::where('is_delete', 0);
 
         if ($search) {
             $queries->where('name', 'like', '%' . $search . '%');
         }
+        $queries = $queries->paginate($limit);
 
         return response()->json([
             'status' => true,
@@ -64,6 +65,7 @@ class RentCategoryController extends Controller
     {
         $query = RentCategory::find($request->id);
         $query->name = $request->name;
+        $query->slug = $request->slug;
         $query->status = $request->status;
         $query->save();
 

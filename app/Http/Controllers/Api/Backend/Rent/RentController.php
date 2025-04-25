@@ -11,9 +11,14 @@ class RentController extends Controller
 {
     public function index(Request $request)
     {
-        $userId = Auth::id();
+        $search = $request->search ?? null;
+        $limit = $request->limit ?? 10;
 
         $rents = Rent::where('is_delete', 0);
+
+        if ($search) {
+            $rents->where('title', 'like', '%' . $search . '%');
+        }
 
         if ($request->has('category')) {
             $rents->where('category_id', $request->category);
@@ -43,7 +48,7 @@ class RentController extends Controller
             $rents->where('LOWER(TRIM(location)) LIKE ?', ["%" . strtolower($request->location) . "%"]);
         }
 
-        $rents = $rents->orderBy('created_at', 'desc')->paginate(10);
+        $rents = $rents->orderBy('created_at', 'desc')->paginate($limit);
 
         return response()->json([
             'success' => true,
@@ -61,42 +66,44 @@ class RentController extends Controller
         ], 200);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, Rent $rent)
     {
-        $rent = Rent::findOrFail($request->id);
-
+        $validated = $request->validate([
+            'category_id' => 'required|integer',
+            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'rent_type' => 'required|string',
+            'property_type' => 'required|string',
+            'price' => 'required|numeric',
+            'discount_price' => 'nullable|numeric',
+            'description' => 'nullable|string',
+            'keyword' => 'nullable|string',
+            'location' => 'required|string',
+            'area_size' => 'nullable|string',
+            'floor_no' => 'nullable|string',
+            'bedroom' => 'nullable|integer',
+            'bathroom' => 'nullable|integer',
+            'balcony' => 'nullable|integer',
+            'kitchen' => 'nullable|integer',
+            'type' => 'nullable|string',
+            'available_date' => 'nullable|date',
+            'image.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+    
         if ($rent->image) {
             $oldImages = json_decode($rent->image, true);
             if (is_array($oldImages)) {
                 foreach ($oldImages as $oldImage) {
                     $oldImagePath = public_path('uploads/rents/' . $oldImage);
                     if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath);
+                        @unlink($oldImagePath);
                     }
                 }
             }
         }
-
-        // $rent->user_id = Auth::user()->id;
-        $rent->category_id = $request->category_id;
-        $rent->title = $request->title;
-        $rent->name = $request->name;
-        $rent->rent_type = $request->rent_type;
-        $rent->property_type = $request->property_type;
-        $rent->price = $request->price;
-        $rent->discount_price = $request->discount_price;
-        $rent->description = $request->description;
-        $rent->keyword = $request->keyword;
-        $rent->location = $request->location;
-        $rent->area_size = $request->area_size;
-        $rent->floor_no = $request->floor_no;
-        $rent->bedroom = $request->bedroom;
-        $rent->bathroom = $request->bathroom;
-        $rent->balcony = $request->balcony;
-        $rent->kitchen = $request->kitchen;
-        $rent->type = $request->type;
-        $rent->available_date = $request->available_date;
-
+    
+        $rent->fill($validated);
+    
         if ($request->hasFile('image')) {
             $imageArray = [];
             foreach ($request->file('image') as $file) {
@@ -106,15 +113,14 @@ class RentController extends Controller
             }
             $rent->image = json_encode($imageArray);
         }
-
+    
         $rent->save();
-
-        return response()->json(['message' => 'Rent updated successfully'], 200);
+    
+        return response()->json(['message' => 'Rent updated successfully', 'rent' => $rent], 200);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, Rent $rent)
     {
-        $rent = Rent::find($id);
         $rent->is_delete = 1;
         $rent->save();
         return response()->json(['message' => 'Rent deleted successfully'], 200);
