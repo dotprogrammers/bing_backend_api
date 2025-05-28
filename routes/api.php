@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('mobile-verify', [AuthController::class, 'mobileVerify']);
+Route::post('mobile-resend-otp', [AuthController::class, 'mombileResend']);
 Route::post('login', [AuthController::class, 'login']);
 
 // Frontend Routes

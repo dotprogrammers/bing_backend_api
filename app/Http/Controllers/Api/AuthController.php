@@ -115,6 +115,41 @@ class AuthController extends Controller
             'message' => 'Mobile number verified successfully.',
         ]);
     }
+    public function mombileResend(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'mobile_number' => 'required|numeric',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 422,
+            'errors' => $validator->errors(),
+        ], 422);
+    }
+
+    $user = User::where('mobile_number', $request->mobile_number)->first();
+
+    if (!$user) {
+        return response()->json([
+            'status' => 404,
+            'message' => 'Mobile number not found.',
+        ], 404);
+    }
+
+    $otp = rand(100000, 999999);
+    $user->update([
+        'sms_otp' => $otp,
+    ]);
+
+    (new SmsService)->sendMessage($user->mobile_number, "Your verification code is $otp");
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'OTP resent successfully.',
+    ]);
+}
+
 
     public function login(Request $request)
     {
